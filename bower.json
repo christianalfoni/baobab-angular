@@ -1,0 +1,8 @@
+{
+  "name": "baobab-angular",
+  "version": "0.1.0",
+  "main": "release/baobab-angular.js",
+  "dependencies": {
+    "angular": "1.2 - 1.3"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "baobab-angular",
+  "version": "0.1.0",
+  "description": "A baobab tree for Angular JS",
+  "main": "./src/main.js",
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start karma.conf.js",
+    "start": "gulp",
+    "gulp": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/christianalfoni/baobab-angular.git"
+  },
+  "author": "Christian Alfoni",
+  "license": "MIT",
+  "devDependencies": {
+    "browserify": "^5.9.3",
+    "glob": "^4.2.1",
+    "gulp": "^3.8.11",
+    "gulp-jshint": "^1.9.0",
+    "gulp-notify": "^1.4.2",
+    "gulp-util": "^3.0.0",
+    "jasmine-core": "^2.2.0",
+    "jshint-stylish": "^1.0.0",
+    "karma": "^0.12.31",
+    "karma-jasmine": "^0.3.5",
+    "vinyl-source-stream": "^0.1.1",
+    "watchify": "^1.0.2"
+  },
+  "dependencies": {
+    "angular": "~1.2"
+  }
+}
