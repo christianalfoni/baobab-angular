@@ -6,15 +6,23 @@ var Baobab = require('baobab');
 var safeDeepClone = require('./safeDeepClone.js');
 
 // Flux Service is a wrapper for the Yahoo Dispatchr
-var BaobabService = function () {
-  
-  this.createTree = function (tree) {
-    return new Baobab(tree, {
-      clone: true,
-      cloningFunction: function (obj) {
-        return safeDeepClone('[circular]',[], obj);
-      }
+var BaobabService = function ($rootScope) {
+
+  this.create = function (tree, options) {
+    options = options || {};
+
+    options.clone = true;
+    options.cloningFunction = function (obj) {
+      return safeDeepClone('[circular]', [], obj);
+    };
+
+    var tree = new Baobab(tree, options);
+    tree.on('update', function () {
+      setTimeout(function () {
+        $rootScope.$apply();
+      }, 0);
     });
+    return tree;
   };
 
 };
@@ -23,42 +31,10 @@ var BaobabService = function () {
 
 // Monkeypatch angular module (add .store)
 
-// Wrap "angular.module" to attach store method to module instance
-var angularModule = angular.module;
-angular.module = function () {
-
-  // Call the module as normaly and grab the instance
-  var moduleInstance = angularModule.apply(angular, arguments);
-
-  // Attach store method to instance
-  moduleInstance.tree = function (treeName, treeDefinition) {
-
-    // Create a new store
-    this.factory(treeName, ['$injector', 'baobab', '$rootScope', function ($injector, baobab, $rootScope) {
-
-      var tree = $injector.invoke(treeDefinition);
-      var instance = baobab.createTree(tree);
-      instance.on('update', function () {
-        setTimeout(function () {
-          $rootScope.$apply();
-        }, 0);
-      });
-      return instance;
-
-    }]);
-
-    return this;
-
-  };
-
-  return moduleInstance;
-
-};
-
 angular.module('baobab', [])
-  .provider('baobab', function FluxProvider () {
-    this.$get = [function fluxFactory () {
-      return new BaobabService();
+  .provider('baobab', function FluxProvider() {
+    this.$get = ['$rootScope', function fluxFactory($rootScope) {
+      return new BaobabService($rootScope);
     }];
   })
   .run(['$rootScope', '$injector', 'baobab', function ($rootScope, $injector, baobab) {
